@@ -1,9 +1,5 @@
-// app/api/contact/route.ts
 import { NextResponse } from 'next/server';
 import * as z from 'zod';
-
-// DO NOT import Resend at the top!
-// import { Resend } from 'resend';  ← REMOVE THIS LINE
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -14,16 +10,13 @@ const contactSchema = z.object({
 export async function POST(req: Request) {
   try {
     const apiKey = process.env.RESEND_API_KEY;
+    console.log('API Key loaded:', apiKey ? 'Yes' : 'No');  // Log for debug
 
     if (!apiKey) {
-      console.error('RESEND_API_KEY is missing');
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Server configuration error - API key missing' }, { status: 500 });
     }
 
-    // DYNAMIC IMPORT: Only load Resend when POST is called
+    // Dynamic import for Vercel
     const { Resend } = await import('resend');
     const resend = new Resend(apiKey);
 
@@ -31,33 +24,29 @@ export async function POST(req: Request) {
     const result = contactSchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error.issues[0].message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: result.error.issues[0].message }, { status: 400 });
     }
 
     const { name, email, message } = result.data;
 
+    // Use a verified sender - update with your email
     const { error } = await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: ['your-real-email@gmail.com'], // CHANGE THIS
-      subject: 'New Message from Portfolio',
+      from: 'Abdurahman Portfolio <onboarding@resend.dev>',  // Test with this; verify domain later
+      to: ['abduhuddien6306@gmail.com'],  // REPLACE with YOUR email (where messages go)
+      subject: 'New Message from Abdurahman\'s Portfolio',
       replyTo: email,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
 
+    console.log('Resend error:', error);  // Log for debug
+
     if (error) {
-      console.error('Resend error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: `Email send failed: ${error.message}` }, { status: 500 });
     }
 
-    return NextResponse.json({ message: 'Message sent!' }, { status: 200 });
+    return NextResponse.json({ message: 'Message sent successfully!' }, { status: 200 });
   } catch (error: unknown) {
     console.error('Contact form error:', error);
-    return NextResponse.json(
-      { error: 'Failed to send message' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to send message - server error' }, { status: 500 });
   }
 }

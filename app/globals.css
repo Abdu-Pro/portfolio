@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --dark-green: #006400;
+  --navy: #000080;
+  --neon-blue: #00FFFF;
+  --black: #000000;
+  --gold: #FFD700;
+}
+
 .animate-fadeIn {
   animation: fadeIn 1s ease-in-out;
 }
