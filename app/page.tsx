@@ -160,7 +160,7 @@ export default function Home() {
             complex problems and lead high-stakes projects.
           </p>
           <div className="text-center mt-6">
-            <a href="/Resume.pdf" download className="inline-block bg-neon-blue text-black px-6 py-3 rounded-lg hover:bg-gold transition"> Download Resume </a>
+            <a href="public/resume.pdf" download className="inline-block bg-neon-blue text-black px-6 py-3 rounded-lg hover:bg-gold transition"> Download Resume </a>
           </div>
         </section>
 

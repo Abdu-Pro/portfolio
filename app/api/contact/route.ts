@@ -32,8 +32,8 @@ export async function POST(req: Request) {
     // Use a verified sender - update with your email
     const { error } = await resend.emails.send({
       from: 'Abdurahman Portfolio <onboarding@resend.dev>',  // Test with this; verify domain later
-      to: ['abduhuddien6306@gmail.com'],  // REPLACE with YOUR email (where messages go)
-      subject: 'New Message from Abdurahman\'s Portfolio',
+      to: ['abduhussien6306@gmail.com'],  // REPLACE with YOUR email (where messages go)
+      subject: 'New Message from Abdu\'s Portfolio',
       replyTo: email,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
